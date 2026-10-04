@@ -1,0 +1,66 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>40代バドミントン大会</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#222;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif}
+header{background:#fff;padding:20px 15px 12px;position:sticky;top:0;z-index:5;box-shadow:0 1px 8px #0001}
+h1{font-size:21px;margin:0 0 4px}.sub{font-size:12px;color:#777}
+.tabs{display:flex;gap:7px;margin-top:13px;overflow:auto}.tab{border:0;background:#f0f1f4;padding:8px 12px;border-radius:20px;white-space:nowrap;font-size:12px}.tab.active{background:#222;color:#fff}
+.search{margin-top:10px;display:flex;gap:7px}input{width:100%;border:1px solid #ddd;border-radius:11px;padding:10px;font-size:14px}
+main{padding:12px 14px 30px}.section{font-size:13px;font-weight:700;margin:7px 2px 10px}
+.card{background:#fff;border-radius:17px;padding:15px;margin-bottom:10px;box-shadow:0 2px 8px #0000000d;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.card:active{transform:scale(.985)}.top{display:flex;justify-content:space-between;gap:6px}.pill{font-size:11px;background:#eef2ff;border-radius:20px;padding:4px 8px}.ok{background:#edf8ed}.warn{background:#fff3d9}
+.date{font-size:12px;color:#777;margin-top:9px}.name{font-size:16px;font-weight:700;line-height:1.4;margin-top:3px}.event{font-size:12px;color:#666;margin-top:4px}
+.count{font-size:12px;margin-top:10px;font-weight:600}.hint{font-size:11px;text-align:right;color:#888;margin-top:8px}
+#detail{display:none;background:#fff;min-height:100vh}.bar{padding:13px 15px;border-bottom:1px solid #eee;position:sticky;top:0;background:#fff;z-index:7}.back{border:0;border-radius:10px;padding:8px 12px;background:#f0f1f4;font-size:14px}
+.body{padding:18px 16px 40px}.title{font-size:21px;font-weight:700;line-height:1.45;margin-bottom:17px}
+dt{font-size:11px;color:#888;margin-top:14px}dd{font-size:14px;margin:3px 0 0;line-height:1.5}.note{margin-top:19px;background:#f6f7f9;padding:13px;border-radius:13px;font-size:13px;line-height:1.7}
+.btn{display:block;text-align:center;text-decoration:none;padding:13px;border-radius:12px;margin-top:14px;background:#222;color:#fff;font-size:14px}
+.empty{text-align:center;color:#888;padding:35px}
+</style></head><body>
+<div id="home"><header><h1>🏸 40代バドミントン大会</h1><div class="sub">東京・神奈川 ／ ダブルス</div>
+<div class="tabs">
+<button class="tab active" data-f="all">すべて</button><button class="tab" data-f="soon">締切が近い</button><button class="tab" data-f="tokyo">東京都</button><button class="tab" data-f="kanagawa">神奈川県</button>
+</div><div class="search"><input id="q" placeholder="大会名・会場を検索"></div></header>
+<main><div class="section">大会一覧</div><div id="list"></div></main></div>
+<div id="detail"><div class="bar"><button class="back" onclick="home()">‹ 大会一覧</button></div><div class="body" id="dbody"></div></div>
+<script>
+const data=[{"area": "神奈川", "date": "2027-02-07", "name": "シニアスポーツフェスタ2026 県シニア選手権大会（ダブルス）", "event": "男子・女子ダブルス", "age": "シニア対象・年齢区分は要項確認", "deadline": null, "venue": "小田原アリーナ", "status": "要項待ち", "url": "https://www.badminton-kk.org/pjplan/nowyear.htm", "note": "神奈川県協会の2026年度事業計画に掲載。申込締切・細かな年齢区分は大会要項公開後に確認。"}, {"area": "神奈川", "date": "2027-02-11", "name": "シニアスポーツフェスタ2026 県シニア選手権大会（混合）", "event": "混合ダブルス", "age": "シニア対象・年齢区分は要項確認", "deadline": null, "venue": "県立スポーツセンター アリーナ2", "status": "要項待ち", "url": "https://www.badminton-kk.org/pjplan/nowyear.htm", "note": "神奈川県協会の2026年度事業計画に掲載。申込締切は要項公開後に確認。"}, {"area": "神奈川", "date": "2027-03-06", "name": "県総合選手権大会（ダブルス）", "event": "男子・女子ダブルス", "age": "参加資格・年齢条件は要項確認", "deadline": null, "venue": "大和市スポーツセンター", "status": "要項待ち", "url": "https://www.badminton-kk.org/pjplan/nowyear.htm", "note": "神奈川県協会の2026年度事業計画に掲載。40代での参加可否は要項確認。"}, {"area": "神奈川", "date": "2026-07-25", "name": "第2回会長杯B大会（ダブルス）", "event": "男女ダブルス", "age": "要項の参加資格を確認", "deadline": "2026-07-13", "venue": "秩父宮記念体育館", "status": "終了", "url": "https://www.badminton-kk.org/topics.htm", "note": "神奈川県協会が要項・申込書を掲載。申込締切は7月13日18時。"}, {"area": "東京都", "date": "2026-12-20", "name": "第51回 八王子オープンダブルスバドミントン大会", "event": "男子・女子ダブルス", "age": "高校生以上（40代参加可）", "deadline": "2026-11-17", "venue": "エスフォルタアリーナ八王子", "status": "募集中", "url": "https://tokyoto-badminton.net/Open.html", "note": "申込期間は10月20日〜11月17日。大会要項・申込方法は公式ページで確認。"}, {"area": "東京都", "date": "2027-03-20", "name": "東京都ダブルス選手権大会", "event": "男子・女子ダブルス（40〜55歳区分）", "age": "40〜55歳", "deadline": null, "venue": "町田市総合体育館", "status": "要項待ち", "url": "https://tokyoto-badminton.net/Schedule.html", "note": "東京都協会の令和8年度スケジュール掲載大会。締切等は要項公開後に確認。"}];
+let filter="all";
+function days(s){if(!s)return null;const d=new Date(s+"T00:00:00"),t=new Date();return Math.ceil((d-t)/86400000)}
+function render(){
+ const q=document.getElementById("q").value.toLowerCase();
+ let arr=data.map((x,i)=>({...x,i})).filter(x=>{
+  const text=(x.name+" "+x.venue+" "+x.event).toLowerCase();
+  const match=!q||text.includes(q);
+  const area=filter==="tokyo"?x.area==="東京都":filter==="kanagawa"?x.area==="神奈川":true;
+  const soon=filter==="soon"&&days(x.deadline)!=null&&days(x.deadline)>=0&&days(x.deadline)<=14;
+  return match && (filter==="soon"?soon:area);
+ });
+ const box=document.getElementById("list");
+ if(!arr.length){box.innerHTML='<div class="empty">該当する大会がありません</div>';return}
+ box.innerHTML=arr.map(x=>{
+   const n=days(x.deadline);
+   const countdown=n===null?"締切：要項公開後":n<0?"締切終了":n===0?"本日締切":"締切まであと"+n+"日";
+   const cls=n!==null&&n>=0&&n<=14?"warn":"ok";
+   return `<div class="card" onclick="detail(${x.i})">
+    <div class="top"><span class="pill">${x.area}</span><span class="pill ${cls}">${x.status}</span></div>
+    <div class="date">${x.date}</div><div class="name">${x.name}</div><div class="event">${x.event}</div>
+    <div class="count">${countdown}</div><div class="hint">タップして詳細を見る →</div>
+   </div>`;
+ }).join("");
+}
+function detail(i){
+ const x=data[i],n=days(x.deadline);
+ const countdown=n===null?"要項公開後に確認":n<0?"締切終了":n===0?"本日締切":"締切まであと"+n+"日";
+ document.getElementById("dbody").innerHTML=`<div class="title">${x.name}</div>
+ <dl><dt>開催日</dt><dd>${x.date}</dd><dt>地域</dt><dd>${x.area}</dd><dt>会場</dt><dd>${x.venue}</dd>
+ <dt>種目</dt><dd>${x.event}</dd><dt>年齢・参加条件</dt><dd>${x.age}</dd><dt>申込締切</dt><dd>${x.deadline||"未発表"}</dd>
+ <dt>締切状況</dt><dd>${countdown}</dd></dl><div class="note">${x.note}</div>
+ <a class="btn" href="${x.url}" target="_blank" rel="noopener">公式サイト・要項を見る ↗</a>`;
+ document.getElementById("home").style.display="none";document.getElementById("detail").style.display="block";scrollTo(0,0)
+}
+function home(){document.getElementById("detail").style.display="none";document.getElementById("home").style.display="block";scrollTo(0,0)}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(z=>z.classList.remove("active"));b.classList.add("active");filter=b.dataset.f;render()});
+document.getElementById("q").oninput=render;render();
+</script></body></html>
